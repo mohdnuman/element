@@ -4,6 +4,7 @@ let web3;
 const poolAbi = require("./poolAbi.json");
 const vaultAbi = require("./vaultAbi.json");
 const tokenAbi = require("./tokenAbi.json");
+const yieldAbi = require("./yieldAbi.json");
 
 const readline = require("readline-sync");
 
@@ -12,7 +13,7 @@ const provider = new Web3.providers.HttpProvider(
 );
 web3 = new Web3(provider);
 
-const poolAddresses = [
+const LiquiditypoolAddresses = [
   "0x56df5ef1A0A86c2A5Dd9cC001Aa8152545BDbdeC",
   "0xEdf085f65b4F6c155e13155502Ef925c9a756003",
   "0x56F30398d13F111401d6e7ffE758254a0946687d",
@@ -33,10 +34,48 @@ const poolAddresses = [
   "0x893B30574BF183d69413717f30b17062eC9DFD8b",
   "0xA8D4433BAdAa1A35506804B43657B0694deA928d",
 
-  "0x7173b184525feAD2fFbde5FBe6FCB65Ea8246eE7",
+  "0xABb93e3787b984cb62dCD962af8732f52Ff57586",
+  "0x63E9B50DD3eB63BfBF93B26F57b9EFB574e59576",
+  "0x14792d3F6FcF2661795d1E08ef818bf612708BbF",
+  "0x09b1b33BaD0e87454ff05696b1151BFbD208a43F",
+  "0xC9AD279994980F8DF348b526901006972509677F",
 ];
 
-async function getLPdata(address) {
+const yieldPoolAddresses = [
+  "0x415747EE98D482e6dD9B431fa76Ad5553744F247",
+  "0x8E9d636BbE6939BD0F52849afc02C0c66F6A3603",
+  "0xCF354603A9AEbD2Ff9f33E1B04246d8Ea204ae95",
+  "0x7173b184525feAD2fFbde5FBe6FCB65Ea8246eE7",
+  "0x4aBB6FD289fA70056CFcB58ceBab8689921eB922",
+  "0x7C9cF12d783821d5C63d8E9427aF5C44bAd92445",
+  "0x062F38735AAC32320DB5e2DBBEb07968351D7C72",
+  "0xB70c25D96EF260eA07F650037Bf68F5d6583885e",
+  "0x4212bE3C7b255bA4B29705573ABD023cdcE21542",
+  "0x9e030b67a8384cbba09D5927533Aa98010C87d91",
+  "0x7320d680Ca9BCE8048a286f00A79A2c9f8DCD7b3",
+  "0xd16847480D6bc218048CD31Ad98b63CC34e5c2bF",
+  "0x2D6e3515C8b47192Ca3913770fa741d3C4Dac354",
+  "0xE54B3F5c444a801e61BECDCa93e74CdC1C4C1F90",
+  "0xD5D7bc115B32ad1449C6D0083E43C87be95F2809",
+  "0xF94A7Df264A2ec8bCEef2cFE54d7cA3f6C6DFC7a",
+  "0x67F8FCb9D3c463da05DE1392EfDbB2A87F8599Ea",
+  "0xDe620bb8BE43ee54d7aa73f8E99A7409Fe511084",
+
+  "0x63E9B50DD3eB63BfBF93B26F57b9EFB574e59576",
+  "0x6FE95FafE2F86158c77Bf18350672D360BfC78a2",
+  "0x5fA3ce1fB47bC8A29B5C02e2e7167799BBAf5F41",
+  "0x1D310a6238e11c8BE91D83193C88A99eB66279bE",
+  "0x802d0f2f4b5f1fb5BfC9b2040a703c1464e1D4CB",
+];
+
+const yieldAddresses = [
+  "0xCFe60a1535ecc5B0bc628dC97111C8bb01637911",
+  "0x52C9886d5D87B0f06EbACBEff750B5Ffad5d17d9",
+  "0x2c72692E94E757679289aC85d3556b2c0f717E0E",
+  "0x49e9e169f0B661Ea0A883f490564F4CC275123Ed",
+];
+
+async function getLPdata(address, poolAddresses) {
   for (let i = 0; i < poolAddresses.length; i++) {
     let Paddress = poolAddresses[i];
     const poolInstance = new web3.eth.Contract(poolAbi, Paddress);
@@ -82,5 +121,22 @@ async function getLPdata(address) {
   }
 }
 
+async function getYieldData(address, addresses) {
+  for (let i = 0; i < addresses.length; i++) {
+    let Yaddress = addresses[i];
+    const yieldInstance = new web3.eth.Contract(yieldAbi, Yaddress);
+
+    let balance = await yieldInstance.methods.balanceOf(address).call();
+    let decimals = await yieldInstance.methods.decimals().call();
+    let name = await yieldInstance.methods.name().call();
+
+    balance = (balance / 10 ** decimals).toFixed(2);
+
+    if (balance != 0) console.log(name, balance);
+  }
+}
+
 let address = readline.question("enter address:");
-getLPdata(address);
+getLPdata(address,LiquiditypoolAddresses);
+getLPdata(address,yieldPoolAddresses);
+getYieldData(address, yieldAddresses);
