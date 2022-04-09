@@ -73,6 +73,12 @@ const yieldAddresses = [
   "0x52C9886d5D87B0f06EbACBEff750B5Ffad5d17d9",
   "0x2c72692E94E757679289aC85d3556b2c0f717E0E",
   "0x49e9e169f0B661Ea0A883f490564F4CC275123Ed",
+  "0x21Fb757C2d3a5C574e8721027C3d7a506d77b6b3",
+  "0x2361102893CCabFb543bc55AC4cC8d6d0824A67E",
+  "0x0740A6CfB9468B8b53070C0B327099293DCCB82d",
+  "0xEaa1cBA8CC3CF01a92E9E853E90277B5B8A23e07",
+  "0xC63958D9D01eFA6B8266b1df3862c6323CbDb52B",
+  "0x285328906D0D33cb757c1E471F5e2176683247c2",
 ];
 
 async function getLPdata(address, poolAddresses) {
@@ -132,7 +138,7 @@ async function getYieldData(address, addresses) {
 
     balance = (balance / 10 ** decimals).toFixed(2);
 
-    if (balance != 0) console.log(name, balance);
+    if (balance != 0) console.log(name, balance); 
   }
 }
 
